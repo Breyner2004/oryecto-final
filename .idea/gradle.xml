@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/app/android" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/app/android" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/haptics/android" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/haptics/android" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/keyboard/android" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/keyboard/android" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/status-bar/android" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/shopping-cart/node_modules/@capacitor/status-bar/android" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

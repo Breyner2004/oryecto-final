@@ -5,7 +5,10 @@ import ClientePage from '../views/ClientePage.vue'
 import LoginPage from '../views/LoginPage.vue'
 import DasboardPage from '../views/DasboardPage.vue'
 import ProductoPage from '@/views/ProductoPage.vue';
-
+import RCategoriaPage from '@/views/RCategoriaPage.vue';
+import RClientesPage from '@/views/RClientesPage.vue';
+import OrdenesPage from '@/views/OrdenesPage.vue';
+import ListaPPage from '@/views/ListaPPage.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -34,6 +37,26 @@ const routes: Array<RouteRecordRaw> = [
     path: '/producto',
     name: 'Producto',
     component: ProductoPage
+  },
+  {
+    path: '/rcategoria',
+    name: 'RCategoria',
+    component: RCategoriaPage
+  },
+  {
+    path: '/rcliente',
+    name: 'RCliente',
+    component: RClientesPage
+  },
+  {
+    path: '/ordenes',
+    name: 'Ordenes',
+    component: OrdenesPage
+  },
+  {
+    path: '/listap',
+    name: 'ListaP',
+    component: ListaPPage
   }
 ]
 

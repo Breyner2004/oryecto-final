@@ -36,7 +36,7 @@ import java.util.Optional;
             Proveedor proveedorToUpdate = optionalProveedor.get();
             proveedorToUpdate.setCodigo(proveedor.getCodigo());
             proveedorToUpdate.setNombre(proveedor.getNombre());
-            proveedorToUpdate.setMarca(proveedor.getMarca());
+        
             repository.save(proveedorToUpdate);
         } else {
             System.out.println("No existe el proveedor");

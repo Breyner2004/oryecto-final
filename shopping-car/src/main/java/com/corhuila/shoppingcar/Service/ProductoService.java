@@ -47,6 +47,10 @@ public class ProductoService implements IProductoService {
             System.out.println("No existe el producto");
         }
     }
+    @Override
+    public List<Producto> obtenerProductosPorCategoria(String categoriaId) {
+        return repository.findByCategoriaId(categoriaId);
+    }
 
     @Override
     public void delete(String id) {

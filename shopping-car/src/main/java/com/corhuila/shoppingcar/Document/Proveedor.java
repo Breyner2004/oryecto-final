@@ -13,11 +13,10 @@ public class Proveedor {
     @Field
     private String codigo;
 
-    @Field
-    private String nombre;
+    
 
     @Field
-    private String marca;
+    private String nombre;
 
     public String getId() {
         return id;
@@ -43,12 +42,6 @@ public class Proveedor {
         this.nombre = nombre;
     }
 
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
+    
 }
 

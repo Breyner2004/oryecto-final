@@ -11,5 +11,6 @@ public interface IProductoService {
     Producto save(Producto producto); // Guarda un producto
     void update(Producto producto, String id); // Actualiza un producto
     void delete(String id); // Elimina un producto
+    List<Producto> obtenerProductosPorCategoria(String categoriaId);
 
 }

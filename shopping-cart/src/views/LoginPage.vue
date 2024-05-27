@@ -83,4 +83,48 @@ const login = async () => {
 .parafo {
   text-align: center;
 }
+
+
+#container {
+  padding: 16px;
+}
+
+.nuevo-registro {
+  margin-bottom: 16px;
+}
+
+.card-width {
+  margin-bottom: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+#data-form ion-item {
+  margin-bottom: 16px;
+}
+
+ion-item ion-label {
+  font-weight: bold;
+}
+
+table-container ion-list ion-card ion-card-content {
+  padding: 16px;
+}
+
+ion-item ion-button {
+  --background: #4caf50;
+  --background-hover: #43a047;
+  --color: #ffffff;
+}
+
+ion-item ion-button:hover {
+  --background: #43a047;
+}
+
 </style>

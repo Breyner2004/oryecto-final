@@ -4,7 +4,6 @@ import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.math.BigDecimal;
 
 @Document(collection = "producto")
 public class Producto {
@@ -19,13 +18,19 @@ public class Producto {
     private String nombre;
 
     @Field
-    private BigDecimal precio;
+    private Double precio;
 
     @Field
     private Integer stock;
 
+    @Field 
+    private String categoriaId;
+
+   
     @Field
     private String marca;
+
+
 
     public String getId() {
         return id;
@@ -51,14 +56,6 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public BigDecimal getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
-    }
-
     public Integer getStock() {
         return stock;
     }
@@ -74,6 +71,31 @@ public class Producto {
     public void setMarca(String marca) {
         this.marca = marca;
     }
+
+    public Double getPrecioDouble() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
+
+    public String getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(String categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+
+
+
+
 
 
 }

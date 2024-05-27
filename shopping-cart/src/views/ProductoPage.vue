@@ -1,252 +1,234 @@
 <template>
-  <ion-page @ionViewDidEnter="findAllRecords">
+  <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Carrito de compra</ion-title>
+        <ion-title>Agregar/Editar un producto</ion-title>
+        <ion-buttons slot="end">
+          <ion-button href="/dashboard">
+            <ion-icon :icon="IonIcons.homeSharp"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content fullscreen>
-      <div id="container">
-        <div class="nuevo-registro">
-          <ion-button @click="openModalAdd"><ion-icon :icon="IonIcons.addSharp"></ion-icon></ion-button>
-        </div>
-
-        <!-- Modal para agregar o editar registros -->
-        <ion-modal :is-open="modalIsOpen" @didDismiss="modalIsOpen = false" :css-class="['my-custom-modal']">
-          <div class="modal-content">
-            <div id="data-form">
-            
-              <InputComponent v-model="codigo" type="number" id="codigo" name="codigo" label="codigo: " />
-              <InputComponent v-model="nombre" id="nombre" name="nombre" label="Nombre: " />
-              <InputComponent v-model="marca" id="marca" name="marca" label="marca: " />
-              <InputComponent v-model="precio" id="precio" name="precio" label="precio: " />
-              <InputComponent v-model="stock" id="stock" name="stock" label="stock: " />
-            </div>
-            <div>
-              <!-- Botones de CRUD dentro del modal -->
-              <CrudButtonComponent :showFind="showFind" :showCreated="showCreated" :showUpdated="showUpdated"
-                :showDeleted="showDeleted" @findAllRecords="findAllRecords" @createRecord="createRecord"
-                @updateRecord="updateRecord" @deleteRecordPhysical="deleteRecordPhysical" />
-            </div>
-          </div>
-        </ion-modal>
-
-
-        <!-- Mostrar datos -->
-        <div class="table-container">
-          <ion-list>
-            <!-- Iterar sobre items para mostrar los datos en tarjetas -->
-            <ion-card v-for="(item, index) in items" :key="index" class="card-width">
-              <ion-card-content>
-                
-                <ion-item>
-                  <ion-label>codigo: </ion-label>
-                  <ion-label>{{ item.codigo }}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label>Nombre: </ion-label>
-                  <ion-label>{{ item.nombre }}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label>marca: </ion-label>
-                  <ion-label>{{ item.marca }}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label>precio: </ion-label>
-                  <ion-label>{{ item.precio }}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label>stock: </ion-label>
-                  <ion-label>{{ item.stock }}</ion-label>
-                </ion-item>
-               
-              </ion-card-content>
-              <ion-item>
-                <!-- Botones de editar y eliminar -->
-                <ion-button @click="findById(item.id)">
-                  <ion-icon :icon="IonIcons.createOutline"></ion-icon>
-                </ion-button>
-                <ion-button @click="deleteRecordPhysical(item.id)">
-                  <ion-icon :icon="IonIcons.trash"></ion-icon>
-                </ion-button>
-              </ion-item>
-            </ion-card>
-          </ion-list>
+    <ion-content ref="content" class="dark-mode">
+      <h1 >Lista de productos</h1>
+      
+      <ion-button color="secondary" @click="openModal('agregar')">Agregar</ion-button>
+      <div class="lista-productos">
+        <div class="producto" v-for="producto in productos" :key="producto.id">
+          <h2>{{ producto.nombre }}</h2>
+          <p><strong>Id :</strong> {{ producto.id }}</p>
+          <p><strong>Código :</strong> {{ producto.codigo }}</p>
+          <p><strong>Marca :</strong> {{ producto.marca }}</p>
+          <p><strong>Precio :</strong> {{ producto.precio }}</p>
+          <p><strong>Categoría :</strong> {{ getCategoryName(producto.categoriaId) }}</p>
+          <p><strong>Stock:</strong> {{ producto.stock }}</p>
+          <ion-button @click="openModal('editar', producto)" color="dark" class="large-button">Editar</ion-button>
+          <ion-button @click="eliminarProducto(producto.id)" color="dark" class="large-button">Eliminar</ion-button>
         </div>
       </div>
+      <ion-modal :is-open="modalIsOpen">
+        <ion-content>
+          <!-- Contenido del modal para agregar/editar -->
+          <div class="formulario">
+            <h2>{{ modalTitle }}</h2>
+            <ion-item>
+              <ion-label>Id:</ion-label>
+              <ion-input v-model="formData.id"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Nombre:</ion-label>
+              <ion-input v-model="formData.nombre"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Código:</ion-label>
+              <ion-input v-model="formData.codigo" type="number"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Marca: </ion-label>
+              <ion-input v-model="formData.marca"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Precio:</ion-label>
+              <ion-input v-model="formData.precio" type="number"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Categoría:</ion-label>
+              <ion-select v-model="formData.categoriaId">
+                <ion-select-option v-for="category in categories" :key="category.id" :value="category.id">{{ category.nombre }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Stock:</ion-label>
+              <ion-input v-model="formData.stock" type="number"></ion-input>
+            </ion-item>
+            <ion-button @click="guardarProducto()" color="success" expand="block">{{ modalAction }}</ion-button>
+            <ion-button @click="cerrarModal()" color="light" expand="block">Cancelar</ion-button>
+          </div>
+        </ion-content>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon, IonModal } from '@ionic/vue';
-import InputComponent from '@/components/InputComponent.vue';
-import CrudButtonComponent from '@/components/CrudButtonComponent.vue';
-import { showSuccessMessage, showErrorMessage } from '../utils/alerts.js';
-import { onMounted, ref } from 'vue';
-import * as IonIcons from 'ionicons/icons';
+import { IonPage, IonContent, IonButton, IonModal, IonItem, IonInput, IonSelect, IonSelectOption, IonToolbar, IonButtons, IonIcon, IonTitle } from '@ionic/vue';
 import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import * as IonIcons from 'ionicons/icons'; // Importa los iconos de Ionic
 
-
-// Rutas de la API
-const baseURL = 'http://localhost:9000/shopping-car/api/producto';
+const url = 'http://localhost:9000/shopping-car/api/producto';
+const categoriesURL = 'http://localhost:9000/shopping-car/api/categorias'; // URL para obtener categorías
 const modalIsOpen = ref(false);
-const items = ref<Array<ItemType>>([]);
-const id = ref('');
-const codigo = ref('');
-const nombre = ref('');
-const marca = ref('');
-const stock = ref('');
-const precio = ref('');
-
-const showFind = ref<boolean>(false);
-const showCreated = ref<boolean>(true);
-const showUpdated = ref<boolean>(false);
-const showDeleted = ref<boolean>(false);
-
-
-// Tipos
-interface ItemType {
-  id: string;
-  tipocodigo: string;
-  codigo: string;
-  nombre: string;
-  marca: string;
-  stock: string;
-  precio: string;
-}
+const modalTitle = ref('');
+const modalAction = ref('');
+const formData = ref({
+  id: '',
+  nombre: '',
+  codigo: '',
+  marca: '',
+  precio: '',
+  categoriaId: '',
+  stock: ''
+});
+const productos = ref([]);
+const categories = ref([]);
 
 onMounted(() => {
-  findAllRecords();
+  obtenerProductos();
+  obtenerCategorias(); // Llamada para obtener categorías
 });
 
-// Métodos
-async function findAllRecords() {
-  try {
-    const response = await axios.get(baseURL);
-    items.value = response.data;
-  } catch (error) {
-    console.error('Error al obtener todos los registros:', error);
-    throw error;
+const obtenerProductos = () => {
+  axios.get(url)
+    .then(response => {
+      productos.value = response.data;
+    })
+    .catch(error => {
+      console.error("Estado de la petición: ", error);
+      alert('No se pudo obtener la lista de productos');
+    });
+};
+
+const obtenerCategorias = () => { // Función para obtener categorías
+  axios.get(categoriesURL)
+    .then(response => {
+      categories.value = response.data;
+    })
+    .catch(error => {
+      console.error("Estado de la petición de categorías: ", error);
+      alert('No se pudo obtener la lista de categorías');
+    });
+};
+
+const openModal = (action, producto = null) => {
+  if (action === 'agregar') {
+    modalTitle.value = 'Agregar Producto';
+    modalAction.value = 'Agregar';
+    formData.value = {
+      id: '',
+      nombre: '',
+      codigo: '',
+      marca: '',
+      precio: '',
+      categoriaId: '',
+      stock: ''
+    };
+  } else if (action === 'editar' && producto) {
+    modalTitle.value = 'Editar Producto';
+    modalAction.value = 'Guardar Cambios';
+    formData.value = { ...producto };
   }
-}
-
-//Cargar los datos para edición
-async function findById(recordId: string) {
-  try {
-    await openModalAdd();
-    const response = await axios.get(`${baseURL}/${recordId}`);
-    const data = response.data;
-
-    id.value = data.id;
-    codigo.value = data.codigo;
-    nombre.value = data.nombre;
-    marca.value = data.marca;
-    stock.value = data.stock;
-    precio.value = data.precio;
-
-    // Controlar la visibilidad de los botones
-    showCreated.value = false;
-    showUpdated.value = true;
-
-
-  } catch (error) {
-    console.error('Error al encontrar el registro por ID:', error);
-    throw error;
-  }
-}
-
-async function createRecord() {
-  const data = {
-    codigo: codigo.value,
-    nombre: nombre.value,
-    marca: marca.value,
-    stock: stock.value,
-    precio: precio.value
-  };
-
-  try {
-    const response = await axios.post(baseURL, data);
-    console.log('Registro creado exitosamente:', response.data);
-    await findAllRecords();
-    await clearData();
-    await showSuccessMessage();
-    await closeModal();
-  } catch (error) {
-    console.error('Error al crear el registro:', error);
-    await showErrorMessage();
-  }
-}
-
-async function updateRecord() {
-  const data = {
-    id: id.value,
-    
-    codigo: codigo.value,
-    nombre: nombre.value,
-    marca: marca.value,
-    stock: stock.value,
-    precio: precio.value
-  };
-
-  try {
-    const response = await axios.put(`${baseURL}/${data.id}`, data);
-    console.log('Registro actualizado exitosamente:', response.data, id);
-
-    await findAllRecords();
-    await clearData();
-
-    showCreated.value = true;
-    showUpdated.value = false;
-
-    await closeModal();
-
-    return response.data;
-  } catch (error) {
-    console.error('Error al actualizar el registro:', error);
-    throw error;
-  }
-}
-
-
-async function deleteRecordPhysical(id: String) {
-  try {
-    const response = await axios.delete(`${baseURL}/${id}`);
-    await findAllRecords();
-    return response.data;
-  } catch (error) {
-    console.error('Error al eliminar el registro físico:', error);
-    throw error;
-  }
-}
-
-async function deleteRecordLogical(id) {
-  try {
-    const response = await axios.put(`${baseURL}/delete-logical/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error al realizar el eliminado lógico:', error);
-    throw error;
-  }
-}
-
-async function clearData() {
-  
-  codigo.value = '';
-  nombre.value = '';
-  marca.value = '';
-  stock.value = '';
-  precio.value = '';
-}
-
-
-const openModalAdd = () => {
   modalIsOpen.value = true;
 };
 
-const closeModal = () => {
+const cerrarModal = () => {
   modalIsOpen.value = false;
+};
+
+const guardarProducto = () => {
+  const data = { ...formData.value };
+  delete data.id; // No enviar el ID al crear un nuevo producto
+
+  axios.post(url, data)
+    .then(response => {
+      obtenerProductos();
+      cerrarModal();
+    })
+    .catch(error => {
+      console.error("Estado de la petición: ", error);
+      alert('Error al guardar el producto');
+    });
+};
+
+const eliminarProducto = (id) => {
+  axios.delete(`${url}/${id}`)
+    .then(response => {
+      obtenerProductos();
+    })
+    .catch(error => {
+      console.error("Estado de la petición: ", error);
+      alert('Error al eliminar el producto');
+    });
+};
+
+const getCategoryName = (categoryId) => {
+  const category = categories.value.find(cat => cat.id === categoryId);
+  return category ? category.nombre : 'Desconocida';
 };
 </script>
 
-<style scoped src="../theme/container.css"></style>
+
+
+<style scoped>
+.lista-productos {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.producto {
+  width: 300px;
+  padding: 20px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.producto h2 {
+  margin-bottom: 10px;
+}
+
+.producto p {
+  margin: 5px 0;
+}
+
+.formulario {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #ff9d9d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para los títulos */
+h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilo para los botones */
+.boton {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0
+}
+</style>

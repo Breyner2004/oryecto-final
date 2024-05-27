@@ -224,46 +224,62 @@ const closeModal = () => {
 
 
 <style scoped>
-#container {
-  padding: 16px;
-}
+  /* Estilos generales */
+  body {
+    background-color: #333; /* Fondo oscuro */
+    color: white; /* Texto blanco */
+    font-family: Arial, sans-serif; /* Fuente genérica */
+    padding: 20px; /* Añadir espacio alrededor del contenido */
+  }
 
-.nuevo-registro {
-  margin-bottom: 16px;
-}
+  /* Estilos específicos */
+  #container {
+    padding: 16px;
+    background-color: #333; /* Fondo oscuro */
+    color: white; /* Texto blanco */
+  }
 
-.card-width {
-  margin-bottom: 16px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  .nuevo-registro {
+    margin-bottom: 16px;
+  }
 
-.modal-content {
-  padding: 16px;
-  border-radius: 10px;
-  background-color: #ffffff;
-}
+  .card-width {
+    margin-bottom: 16px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #555; /* Fondo oscuro para cada tarjeta */
+  }
 
-#data-form ion-item {
-  margin-bottom: 16px;
-}
+  .modal-content {
+    padding: 16px;
+    border-radius: 10px;
+    background-color: #fff; /* Fondo blanco para el contenido del modal */
+    color: #333; /* Texto oscuro */
+  }
 
-ion-item ion-label {
-  font-weight: bold;
-}
+  #data-form ion-item {
+    margin-bottom: 16px;
+  }
 
-table-container ion-list ion-card ion-card-content {
-  padding: 16px;
-}
+  ion-item ion-label {
+    font-weight: bold;
+  }
 
-ion-item ion-button {
-  --background: #4caf50;
-  --background-hover: #43a047;
-  --color: #ffffff;
-}
+  .table-container ion-list ion-card ion-card-content {
+    padding: 16px;
+  }
 
-ion-item ion-button:hover {
-  --background: #43a047;
-}
+  ion-item ion-button {
+    --background: #4caf50; /* Botón verde */
+    --background-hover: #43a047; /* Cambio de color al pasar el ratón */
+    --color: #ffffff; /* Texto blanco */
+    width: 100%; /* Ancho completo */
+    margin-top: 10px; /* Margen superior */
+    border-radius: 5px; /* Borde redondeado */
+  }
 
+  ion-item ion-button:hover {
+    --background: #43a047; /* Color de fondo más oscuro al pasar el ratón */
+  }
 </style>
+

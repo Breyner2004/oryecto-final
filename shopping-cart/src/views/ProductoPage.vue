@@ -11,7 +11,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content ref="content" class="dark-mode">
-      <h1 >Lista de productos</h1>
+      <h1>Lista de productos</h1>
       
       <ion-button color="secondary" @click="openModal('agregar')">Agregar</ion-button>
       <div class="lista-productos">
@@ -34,7 +34,7 @@
             <h2>{{ modalTitle }}</h2>
             <ion-item>
               <ion-label>Id:</ion-label>
-              <ion-input v-model="formData.id"></ion-input>
+              <ion-input v-model="formData.id" :readonly="modalAction === 'Guardar Cambios'"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label>Nombre:</ion-label>
@@ -148,17 +148,28 @@ const cerrarModal = () => {
 
 const guardarProducto = () => {
   const data = { ...formData.value };
-  delete data.id; // No enviar el ID al crear un nuevo producto
 
-  axios.post(url, data)
-    .then(response => {
-      obtenerProductos();
-      cerrarModal();
-    })
-    .catch(error => {
-      console.error("Estado de la petición: ", error);
-      alert('Error al guardar el producto');
-    });
+  if (modalAction.value === 'Agregar') {
+    axios.post(url, data)
+      .then(response => {
+        obtenerProductos();
+        cerrarModal();
+      })
+      .catch(error => {
+        console.error("Estado de la petición: ", error);
+        alert('Error al guardar el producto');
+      });
+  } else {
+    axios.put(`${url}/${data.id}`, data)
+      .then(response => {
+        obtenerProductos();
+        cerrarModal();
+      })
+      .catch(error => {
+        console.error("Estado de la petición: ", error);
+        alert('Error al actualizar el producto');
+      });
+  }
 };
 
 const eliminarProducto = (id) => {
@@ -178,57 +189,66 @@ const getCategoryName = (categoryId) => {
 };
 </script>
 
-
-
 <style scoped>
-.lista-productos {
-  display: flex;
-  flex-wrap: wrap;
-}
+  /* Estilos generales */
+  body {
+    background-color: #333; /* Fondo oscuro */
+    color: white; /* Texto blanco */
+    font-family: Arial, sans-serif; /* Fuente genérica */
+    padding: 20px; /* Añadir espacio alrededor del contenido */
+  }
 
-.producto {
-  width: 300px;
-  padding: 20px;
-  margin: 10px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-}
+  /* Estilos específicos */
+  .lista-productos {
+    display: grid; /* Usar grid para una disposición más flexible */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Distribuir productos en filas */
+    gap: 20px; /* Espacio entre productos */
+    list-style: none; /* Quitar viñetas de la lista */
+    padding: 0; /* Quitar relleno de la lista */
+  }
 
-.producto h2 {
-  margin-bottom: 10px;
-}
+  .producto {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #555; /* Fondo oscuro para cada producto */
+  }
 
-.producto p {
-  margin: 5px 0;
-}
+  .producto h2 {
+    margin-bottom: 10px;
+    font-size: 1.5rem; /* Tamaño de fuente más grande */
+  }
 
-.formulario {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #ff9d9d;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  .producto p {
+    margin: 5px 0;
+  }
 
-/* Estilo para los títulos */
-h2 {
-  color: #333;
-  text-align: center;
-  margin-bottom: 20px;
-}
+  .formulario {
+    max-width: 100%; /* Ancho máximo para adaptarse al dispositivo */
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ff9d9d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 
-/* Estilo para los botones */
-.boton {
-  width: 100%;
-  margin-top: 20px;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4caf50;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0
-}
+  /* Estilo para los títulos */
+  h2 {
+    color: #ff4d4d; /* Título en rojo */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* Estilo para los botones */
+  .boton {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transición suave al pasar el ratón */
+  }
 </style>
+
